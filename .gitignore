@@ -1,0 +1,12 @@
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+research/*.html
+research/openai-guide.txt
+benchmarks/baseline/
+research/*.tgz
+benchmarks/*.log
+benchmarks/results/**/events.jsonl
+benchmarks/results/**/stderr.log
+benchmarks/results/**/session.jsonl

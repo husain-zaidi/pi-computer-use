@@ -1,0 +1,26 @@
+{
+  "name": "@husain-zaidi/pi-computer-use",
+  "version": "0.1.0",
+  "files": ["extensions", "src", "python", "scripts", "requirements.txt"],
+  "description": "Code-first computer use for pi: persistent Python, Playwright and opt-in PyAutoGUI",
+  "type": "module",
+  "license": "MIT",
+  "keywords": ["pi-package", "computer-use", "playwright", "pyautogui"],
+  "pi": { "extensions": ["./extensions/index.ts"] },
+  "scripts": {
+    "postinstall": "node scripts/postinstall.js",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/client.test.ts && node scripts/test-python.mjs",
+    "benchmark": "node benchmarks/run.mjs"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "typebox": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "0.85.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
