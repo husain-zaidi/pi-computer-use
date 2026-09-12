@@ -23,7 +23,13 @@ The interface is shaped for the frontier: one grounded sequence of actions, veri
 
 ```powershell
 # Install the published package into pi (extension loads directly from TypeScript).
-pi install npm:@husain/pi-computer-use
+pi install npm:@husain-zaidi/pi-computer-use
+```
+
+Or install straight from the public git repo:
+
+```
+pi install git:github.com/husain-zaidi/pi-computer-use
 ```
 
 `pi install` runs the package's `postinstall`, which handles the Python side automatically: it creates `.venv`, installs `requirements.txt` into it, and downloads Playwright's Chromium. If you'd rather do that by hand (or `PI_CUA_SKIP_POSTINSTALL=1` was set), run once in the package directory:
