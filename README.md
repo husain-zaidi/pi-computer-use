@@ -6,16 +6,23 @@ Instead of a separate model call for every click, `exec_py` lets the model inspe
 
 ### Why this is the best computer-use interface
 
-The measured comparison tells the story. On an identical local form-filling task, `pi-computer-use` finished with **2 tool calls and 3 model turns** where the baseline [`@injaneity/pi-computer-use`](https://www.npmjs.com/package/@injaneity/pi-computer-use) needed **13 calls and 14 turns**, at a median wall time of **19.89 s vs 64.93 s** — a **3.26× speedup** ([full report](REPORT.md)).
+The measured comparison tells the story. On an identical local form-filling task, `pi-computer-use` finished with **2 tool calls and 3 model turns** where the baseline [`@injaneity/pi-computer-use`](https://www.npmjs.com/package/@injaneity/pi-computer-use) needed **13 calls and 14 turns**, at a median wall time of **19.89 s vs 64.93 s** — a **3.26× speedup** 
 
-| | **pi-computer-use** | OpenAI CUA sample | Per-click MCP browser tools |
-|---|---|---|---|
-| State across actions | Persistent Python REPL — variables survive calls | Stateless per-step script | None; re-inspect every call |
-| Tool calls per task (measured) | **2** | 13 | ~1 per click |
-| Model turns (measured) | **3** | 14 | ~1 per action |
+| | **pi-computer-use** | @injaneity/pi-computer-use |
+|---|---|---|
+| Tool calls per task (measured) | **2** | 13 |
+| Model turns (measured) | **3** | 14 |
 | Extra API key or model loop | None — Pi owns conversation + auth | OpenAI key + separate client | Host-dependent |
 | Desktop input | Opt-in PyAutoGUI, verified focus refusal, failsafe intact | Raw mouse/keyboard hooks | Screenshot coords, no native focus |
 | Frontier-model fit | Tuned for GPT-6-class long-horizon UI reasoning | Generic | Generic |
+
+Tested for DMV appointment task found in [Astra's blog](https://openai.com/index/gpt-6-astra/?video=1223356203)
+
+| | **pi-computer-use** | @injaneity/pi-computer-use |
+|---|---|---|
+|Time|7m 46s| 13m 59s |
+|Tool Calls|60|119|
+|Tool errors| 1| 10|
 
 The interface is shaped for the frontier: one grounded sequence of actions, verified by screenshots, instead of click-by-click tool chatter. That is what agentic computer use should look like — and it is the direction every model provider's own samples are already converging on.
 
