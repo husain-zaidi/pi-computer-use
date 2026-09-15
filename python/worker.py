@@ -160,7 +160,7 @@ class Runtime:
             user_data_dir = os.environ.get("PI_CUA_PROFILE_DIR") or os.path.expanduser("~/.pi-cua/persistent")
             kwargs = {
                 "headless": not self.headed,
-                "viewport": {"width": 1280, "height": 900},
+                "viewport": {"width": 1285, "height": 900},
                 "device_scale_factor": 1,
             }
             if executable:
