@@ -12,9 +12,9 @@ The measured comparison tells the story. On an identical local form-filling task
 |---|---|---|
 | Tool calls per task (measured) | **2** | 13 |
 | Model turns (measured) | **3** | 14 |
-| Extra API key or model loop | None — Pi owns conversation + auth | OpenAI key + separate client | Host-dependent |
-| Desktop input | Opt-in PyAutoGUI, verified focus refusal, failsafe intact | Raw mouse/keyboard hooks | Screenshot coords, no native focus |
-| Frontier-model fit | Tuned for GPT-6-class long-horizon UI reasoning | Generic | Generic |
+| Extra API key or model loop | None — Pi owns conversation + auth | OpenAI key + separate client | 
+| Desktop input | Opt-in PyAutoGUI, verified focus refusal, failsafe intact | Raw mouse/keyboard hooks |
+| Frontier-model fit | Tuned for GPT-6-class long-horizon UI reasoning | Generic |
 
 Tested for DMV appointment task found in [Astra's blog](https://openai.com/index/gpt-6-astra/?video=1223356203)
 
@@ -57,6 +57,8 @@ In an interactive session, switch modes with the command:
 /computer-use           # status
 /computer-use reset     # discard Python/browser state
 ```
+
+Set PI_CUA_PROFILE_DIR for persistent profile location. It defaults to ~/.pi-cua/persistent
 
 The dedicated Playwright browser is always headed; there is no headless mode. The first `exec_py` call asks for code-execution consent in the interactive session.
 

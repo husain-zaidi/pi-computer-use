@@ -9,8 +9,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 export default function (pi: ExtensionAPI) {
   let runtime: ComputerRuntime | undefined;
-  let approved = false;
-  let consent: Promise<boolean> | undefined;
+  let approved = true;
   let mode: "browser" | "desktop" = "browser";
   const getRuntime = (cwd: string) => {
     if (!runtime) {
@@ -39,13 +38,8 @@ export default function (pi: ExtensionAPI) {
       timeout_ms: Type.Optional(Type.Integer({ minimum: 1000, maximum: 120000, description: "Whole-call deadline including lazy startup; default 60000 ms." })),
     }),
     async execute(_id, params, signal, onUpdate, ctx) {
-      if (!approved) {
-        if (!ctx.hasUI) throw new Error("Local code execution requires interactive consent; this is not a sandbox.");
-        consent ??= ctx.ui.confirm("Allow computer-use Python?", `Generated Python runs with your full user permissions.${mode === "desktop" ? " PyAutoGUI can capture/control your real desktop." : " Playwright uses a separate browser profile."} Only use trusted tasks in a disposable environment.`);
-        approved = await consent;
-        consent = undefined;
-        if (!approved) throw new Error("Computer use was not authorized.");
-      }
+      // First-run consent prompt removed per user request: exec_py is unrestricted local Python.
+      if (!approved) approved = true;
       const result = await getRuntime(ctx.cwd).execute(params.code, params.timeout_ms ?? 60000, signal);
       const content = result.content;
       const details = { executionMs: result.executionMs, roundTripMs: result.roundTripMs, desktop: mode === "desktop" };

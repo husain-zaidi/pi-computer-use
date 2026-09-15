@@ -151,19 +151,25 @@ class Runtime:
         return {"title": window.title, "focused": True}
 
     def start_browser(self, url="about:blank"):
-        """Open/reuse a dedicated Chromium browser. Returns page; also exports page/context/browser."""
-        if self.browser is None:
+        """Open/reuse a dedicated Chromium browser backed by a persistent on-disk profile. Returns page; also exports page/context/browser."""
+        if self.context is None:
             from playwright.sync_api import sync_playwright
             self.playwright = sync_playwright().start()
-            options = {"headless": not self.headed}
             executable = os.environ.get("PI_CUA_BROWSER_EXECUTABLE")
+            # Persistent storage lives at this fixed location across runs (override via PI_CUA_PROFILE_DIR).
+            user_data_dir = os.environ.get("PI_CUA_PROFILE_DIR") or os.path.expanduser("~/.pi-cua/persistent")
+            kwargs = {
+                "headless": not self.headed,
+                "viewport": {"width": 1280, "height": 900},
+                "device_scale_factor": 1,
+            }
             if executable:
-                options["executable_path"] = executable
-            self.browser = self.playwright.chromium.launch(**options)
-            self.context = self.browser.new_context(viewport={"width": 1280, "height": 900}, device_scale_factor=1)
+                kwargs["executable_path"] = executable
+            # launch_persistent_context keeps cookies/storage on disk at user_data_dir.
+            self.context = self.playwright.chromium.launch_persistent_context(user_data_dir=user_data_dir, **kwargs)
             self.context.set_default_timeout(10000)
             self.context.set_default_navigation_timeout(20000)
-            self.page = self.context.new_page()
+            self.page = self.context.pages[0] if self.context.pages else self.context.new_page()
         self.namespace.update(page=self.page, context=self.context, browser=self.browser)
         if url != "about:blank" or self.page.url == "about:blank":
             self.page.goto(url, wait_until="domcontentloaded")
@@ -198,7 +204,9 @@ class Runtime:
 
     def close(self):
         try:
-            if self.browser:
+            if self.context is not None:
+                self.context.close()
+            elif self.browser:
                 self.browser.close()
         finally:
             if self.playwright:
